@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style;
 
 class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictNullComparison, WithEvents
 {
@@ -46,12 +47,20 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
                 $highestColumn = $sheet->getHighestColumn();
+                $highestRow = $sheet->getHighestRow();
+                $styles = [
+                    'alignment' => [
+                        'horizontal' => Style\Alignment::HORIZONTAL_LEFT,
+                    ]
+                ];
+                $sheet->getStyle("A1:{$highestColumn}{$highestRow}")->applyFromArray($styles);
                 if (!empty($this->headings)) {
-                    $sheet->getStyle("A1:{$highestColumn}1")->applyFromArray([
+                    $styles = [
                         'font' => [
-                            'bold' => true
+                            'bold' => true,
                         ]
-                    ]);
+                    ];
+                    $sheet->getStyle("A1:{$highestColumn}1")->applyFromArray($styles);
                 }
             },
         ];
