@@ -5,6 +5,7 @@ namespace Chenyulingxi\LaravelAdmin\GridExporter;
 use Encore\Admin\Grid\Exporters\AbstractExporter;
 use Encore\Admin\Grid\Column;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Arr;
 
 class Exporter extends AbstractExporter
 {
@@ -44,19 +45,16 @@ class Exporter extends AbstractExporter
                 $formattedRow = [];
                 foreach ($columns as $column) {
                     $name = $column->getName();
-                    if (isset($row[$name])) {
-                        $value = strip_tags($row[$name]);
-                        if (isset($this->columnFormatters[$name])) {
-                            $handler = $this->columnFormatters[$name];
-                            if ($handler instanceof \Closure) {
-                                $handler = $handler->bindTo($collection->slice($rowIndex, 1)->first());
-                                $value = call_user_func($handler, $value);
-                            } elseif (is_scalar($handler)) {
-                                $value = $handler;
-                            }
+                    $value = Arr::get($row, $name);
+                    $value = strip_tags($value);
+                    if (isset($this->columnFormatters[$name])) {
+                        $handler = $this->columnFormatters[$name];
+                        if ($handler instanceof \Closure) {
+                            $handler = $handler->bindTo($collection->slice($rowIndex, 1)->first());
+                            $value = call_user_func($handler, $value);
+                        } elseif (is_scalar($handler)) {
+                            $value = $handler;
                         }
-                    } else {
-                        $value = null;
                     }
                     $formattedRow[] = $value;
                 }
@@ -67,4 +65,5 @@ class Exporter extends AbstractExporter
         Excel::download($dataSource, $filename, \Maatwebsite\Excel\Excel::XLSX)->send();
         exit;
     }
+
 }
