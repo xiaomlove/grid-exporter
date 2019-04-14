@@ -1,0 +1,35 @@
+{
+    "name": "xiaomlove/grid-exporter",
+    "description": "export grid data for laravel-admin",
+    "type": "library",
+    "keywords": ["laravel-admin", "extension", "export"],
+    "homepage": "https://github.com/xiaomlove/grid-exporter",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xiaomlove",
+            "email": "353856593@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "encore/laravel-admin": "~1.6",
+        "maatwebsite/excel": "^3.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chenyulingxi\\LaravelAdmin\\GridExporter\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Chenyulingxi\\LaravelAdmin\\GridExporter\\GridExporterServiceProvider"
+            ]
+
+        }
+    }
+}
