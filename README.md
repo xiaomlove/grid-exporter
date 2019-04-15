@@ -32,6 +32,8 @@ if this extension is enabled, it will register as the default exporter (replace 
 if want to format specified column, use it manually. In your controller  
 ```php
 use Chenyulingxi\LaravelAdmin\GridExporter\Exporter;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Events\BeforeExport;
 
 ...
 
