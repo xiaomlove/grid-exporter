@@ -16,6 +16,8 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
 
     protected $headings = [];
 
+    protected $events = [];
+
     public function setRows(array $rows)
     {
         $this->rows = $rows;
@@ -24,6 +26,11 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
     public function setHeadings(array $headings)
     {
         $this->headings = $headings;
+    }
+
+    public function setEvents(array $events)
+    {
+        $this->events = $events;
     }
 
     public function appendRow(array $row)
@@ -41,7 +48,7 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
         return $this->headings;
     }
 
-    public function registerEvents(): array
+    private function getDefaultEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
@@ -64,6 +71,15 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
                 }
             },
         ];
+    }
+
+    public function registerEvents(): array
+    {
+        $events = $this->events;
+        if (empty($events)) {
+            $events = $this->getDefaultEvents();
+        }
+        return $events;
     }
 
 }

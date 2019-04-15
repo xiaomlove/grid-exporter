@@ -45,9 +45,52 @@ protected function grid()
     $grid->updated_at('Updated at');
 
     $exporter = new Exporter();
+    
+    //format the name column
     $exporter->format('name', function ($value) {
-        return strtolower($value);
+        //In the format callback closure, $this bindTo the eloquent model
+        return strtolower($value); 
     });
+    
+    // replace the grid table header
+    $exporter->withHeadings([
+        'id' => '编号',
+        'name' => '姓名',
+        'created_at' => '创建时间',
+        'updated_at' => '更新时间',
+    ]);
+    
+    //change output file (xlsx) style
+    $exporter->setEvents([
+        BeforeExport::class  => function(BeforeExport $event) {
+            $event->writer->getDelegate()->getProperties()->setCreator('xiaomlove');
+        },
+        AfterSheet::class => function ($event) {
+            $sheet = $event->sheet;
+            $highestColumn = $sheet->getHighestColumn();
+            $highestRow = $sheet->getHighestRow();
+            $styles = [
+                'font' => [
+                    'bold' => true,
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                    'rotation' => 90,
+                    'startColor' => [
+                        'argb' => 'FFA0A0A0',
+                    ],
+                    'endColor' => [
+                        'argb' => 'FFFFFFFF',
+                    ],
+                ]
+            ];
+            $sheet->getStyle("A{$highestRow}:{$highestColumn}{$highestRow}")->applyFromArray($styles);
+        }
+    ]);
+    
+    // set write type, default xlsx
+    $exporter->setWriteType(\Maatwebsite\Excel\Excel::CSV);
+    
     $grid->exporter($exporter);
 
     return $grid;
@@ -55,7 +98,7 @@ protected function grid()
 
 ...
 ```
-**In the format callback closure, `$this` bindTo the eloquent model**
+more information reference to [Laravel Excel](https://docs.laravel-excel.com/3.1/exports/extending.html) and [PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/en/latest/topics/recipes/#styles)
 
 License
 ------------
