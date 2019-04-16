@@ -29,7 +29,7 @@ $ composer require xiaomlove/grid-exporter -vvv
 ## Usage
 
 if this extension is enabled, it will register as the default exporter (replace `Encore\Admin\Grid\Exporters\CsvExporter`)  
-if want to format specified column, use it manually. In your controller  
+if you want to format specified column, use it manually. In your controller  
 ```php
 use Chenyulingxi\LaravelAdmin\GridExporter\Exporter;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -103,10 +103,13 @@ protected function grid()
 
 ...
 ```
-if you want more control over the output file, you can create a class that extents from `Chenyulingxi\LaravelAdmin\GridExporter`, then inject it's instance to the exporter like this:
+
+if you want more control over the output file, you can create a class that extents from `Chenyulingxi\LaravelAdmin\GridExporter\DataSource`, then inject it's instance to the exporter like this:
+
 ```php
 $exporter->setDataSource(new TestDataSource());
 ```
+
 more information reference to [Laravel Excel](https://docs.laravel-excel.com/3.1/exports/extending.html) and [PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/en/latest/topics/recipes/#styles)
 
 License
