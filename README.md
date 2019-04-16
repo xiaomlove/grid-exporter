@@ -93,12 +93,19 @@ protected function grid()
     // set write type, default xlsx
     $exporter->setWriteType(\Maatwebsite\Excel\Excel::CSV);
     
+    // set the file name
+    $exporter->setFileName('test-export');
+    
     $grid->exporter($exporter);
 
     return $grid;
 }
 
 ...
+```
+if you want more control over the output file, you can create a class that extents from `Chenyulingxi\LaravelAdmin\GridExporter`, then inject it's instance to the exporter like this:
+```php
+$exporter->setDataSource(new TestDataSource());
 ```
 more information reference to [Laravel Excel](https://docs.laravel-excel.com/3.1/exports/extending.html) and [PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/en/latest/topics/recipes/#styles)
 

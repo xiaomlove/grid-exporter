@@ -21,6 +21,8 @@ class Exporter extends AbstractExporter
 
     protected $events = [];
 
+    protected $dataSource;
+
     public function format($name, $handler)
     {
         $this->columnFormatters[$name] = $handler;
@@ -39,6 +41,11 @@ class Exporter extends AbstractExporter
     public function setEvents(array $events)
     {
         $this->events = $events;
+    }
+
+    public function setDataSource(DataSource $dataSource)
+    {
+        $this->dataSource = $dataSource;
     }
 
     public function withHeadings($headings)
@@ -100,7 +107,11 @@ class Exporter extends AbstractExporter
             $columns = $this->grid->columns();
         }
         $headings = $this->getHeadings($columns);
-        $dataSource = new DataSource();
+        if ($this->dataSource instanceof DataSource) {
+            $dataSource = $this->dataSource;
+        } else {
+            $dataSource = new DataSource();
+        }
         $dataSource->setHeadings(array_values($headings));
         $dataSource->setEvents($this->events);
 

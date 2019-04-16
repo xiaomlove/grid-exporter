@@ -48,7 +48,7 @@ class DataSource implements FromArray, WithHeadings, ShouldAutoSize, WithStrictN
         return $this->headings;
     }
 
-    private function getDefaultEvents(): array
+    protected function getDefaultEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
